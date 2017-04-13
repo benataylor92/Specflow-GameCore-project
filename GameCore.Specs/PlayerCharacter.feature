@@ -34,3 +34,9 @@ Scenario: Elf race characters get additional 200 damage resistance in a data tab
 		| Resistance | 100   |
 	When I take 700 damage
 	Then My health should be 600
+
+Scenario: Healers restore all health
+	Given My character class is set to Healer
+	When I take 400 damage
+		And Cast a healing spell
+	Then My health should be 1000

@@ -16,6 +16,24 @@ namespace GameCore
 
         public string Race { get; set; }
 
+        public int MagicalPower
+        {
+            get { return MagicalItems.Sum(x => x.Power); }
+        }
+
+        public List<MagicalItem> MagicalItems { get; set; } = new List<MagicalItem>();
+
+        public List<Weapon> Weapons { get; set; } = new List<Weapon>();
+
+        public CharacterClass CharacterClass { get; set; }
+
+        public DateTime LastSleepTime { get; set; }
+
+        public int WeaponsValue
+        {
+            get { return Weapons.Sum(x => x.Value); }
+        }
+
         public void Hit(int damage)
         {
             var raceSpecificDamageResistance = 0;
@@ -35,5 +53,42 @@ namespace GameCore
                 IsDead = true;
             }
         }
+
+        public void CastHealingSpell()
+        {
+            if (CharacterClass == CharacterClass.Healer)
+            {
+                Health = 1000;
+            }
+            else
+            {
+                Health += 10;
+            }
+        }
+
+        public void ReadHealthScroll()
+        {
+            var daysSinceLastSleep = DateTime.Now.Subtract(LastSleepTime).Days;
+
+            if (daysSinceLastSleep <= 2)
+            {
+                Health = 1000;
+            }
+        }
+
+        public void UseMagicalItem(string itemName)
+        {
+            int powerReduction = 100;
+
+            if (Race == "Elf")
+            {
+                powerReduction = 0;
+            }
+
+            var itemToReduce = MagicalItems.First(item => item.Name == itemName);
+
+            itemToReduce.Power -= powerReduction;
+        }
+
     }
 }
